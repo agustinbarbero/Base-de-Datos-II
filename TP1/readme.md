@@ -23,17 +23,12 @@ Con FOR UPDATE, READ COMMITTED logra consistencia correcta. Es seguro si se usan
 ![alt text](https://github.com/agustinbarbero/Base-de-Datos-II/blob/main/TP1/img/punto3segunda.jpeg)
 ## Read comitted sin for update
 Ambos usuarios leyeron el mismo saldo: 1000.00
-
 Ambos restaron 100, creyendo que el saldo era suficiente
-
 El saldo final quedó en 900.00 en vez de 800.00
 
 ¿Qué ocurrió?
-
 Al no usar FOR UPDATE, no se bloqueó la fila al leer.
-
 Ambos hilos accedieron al saldo al mismo tiempo, generando una condición de carrera.
-
 Uno de los updates sobrescribió el del otro.
 
 Conclusión:
@@ -43,11 +38,8 @@ El nivel READ COMMITTED por sí solo no evita errores de concurrencia si no se b
 ![alt text](https://github.com/agustinbarbero/Base-de-Datos-II/blob/main/TP1/img/punto3tercera.jpeg)
 ### Serializable sin for update
 Resultado observado:
-
 Ambos usuarios intentaron leer y modificar el mismo saldo.
-
 Uno completó correctamente su transacción.
-
 El otro recibió un error de deadlock (1213) y la transacción fue cancelada.
 
 ¿Qué ocurrió?
@@ -79,51 +71,66 @@ Una consulta con indice lo hace en 20-100 ms, un tiempo mucho mas bajo ya que no
 ## 5
 explain sin indices
 
-
 ![alt text](https://github.com/agustinbarbero/Base-de-Datos-II/blob/main/TP1/img/punto5.jpg)
 
 type: ALL → Búsqueda completa (Full Table Scan).
-
 No se utiliza ningún índice (key: NULL).
-
 rows: 20 → MySQL estima que analizará las 20 filas.
-
 Esto ocurre cuando no hay índice sobre el campo que estás filtrando o no se está aplicando en la consulta.
 
 Conclusión: Consulta poco eficiente.
 
 ![alt text](https://github.com/agustinbarbero/Base-de-Datos-II/blob/main/TP1/img/image-3.png)
 type: ref → Búsqueda por índice, más eficiente.
-
 key: idx_departamento → Se está usando el índice sobre el campo departamento.
-
 rows: 6 → Solo se examinan 6 filas, lo que es mucho mejor.
 
 Conclusión: Ya se está aprovechando el índice y se mejora el rendimiento.
 
 ![alt text](https://github.com/agustinbarbero/Base-de-Datos-II/blob/main/TP1/img/image-4.png)
 possible_keys: idx_departamento, idx_salario
-
 Pero solo se utiliza idx_departamento.
-
 Aunque haya índice en salario, MySQL decide usar el de departamento por ser más selectivo o útil.
-
 filtered: 55.00 → El filtro logra reducir aún más el resultado.
 
 Conclusión: Se sigue usando solo un índice, pero ya con un segundo filtro. Aún así, muy eficiente.
 
 ![alt text](https://github.com/agustinbarbero/Base-de-Datos-II/blob/main/TP1/img/image-5.png)
 possible_keys: idx_departamento, idx_salario, idx_departamento_salario (índice combinado).
-
 Se sigue usando idx_departamento, aunque el índice combinado también era una opción.
-
 filtered: 61.11 → El filtro es más eficaz.
 
 Conclusión: Aunque hay más índices disponibles, MySQL decide usar solo uno (en este caso idx_departamento).
 
 ## 6
+create table ventas (
+id int primary key,
+nombre_producto varchar(100), 
+mes int, 
+cantidad int
+);
 
+create view resumen_mensual as(
+select nombre_producto, mes, sum(cantidad) as total from ventas group by nombre_producto, mes
+);
 
+INSERT INTO ventas (id, nombre_producto, mes, cantidad) VALUES
+(1, 'Zapatilla Runner X', 1, 30),
+(2, 'Zapatilla Runner X', 2, 45),
+(3, 'Remera DryFit', 1, 50),
+(4, 'Remera DryFit', 2, 60),
+(5, 'Short Deportivo', 1, 20),
+(6, 'Short Deportivo', 2, 25),
+(7, 'Campera Impermeable', 1, 10),
+(8, 'Campera Impermeable', 2, 5),
+(9, 'Medias Técnicas', 1, 70),
+(10, 'Medias Técnicas', 2, 80),
+(11, 'Gorra UV', 1, 15),
+(12, 'Gorra UV', 2, 20);
+
+select nombre_producto, sum(total) as total from resumen_mensual group by nombre_producto order by total desc limit 5;
+
+![alt text](https://github.com/agustinbarbero/Base-de-Datos-II/blob/main/TP1/img/punto6.jpg)
 
 
 ## 8
