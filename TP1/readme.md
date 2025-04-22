@@ -80,7 +80,8 @@ Una consulta con indice lo hace en 20-100 ms, un tiempo mucho mas bajo ya que no
 explain sin indices
 
 
-![alt text](https://github.com/agustinbarbero/Base-de-Datos-II/blob/main/TP1/img/image.png)
+![alt text](https://github.com/agustinbarbero/Base-de-Datos-II/blob/main/TP1/img/punto5.jpg)
+
 type: ALL → Búsqueda completa (Full Table Scan).
 
 No se utiliza ningún índice (key: NULL).
@@ -122,3 +123,21 @@ Conclusión: Aunque hay más índices disponibles, MySQL decide usar solo uno (e
 
 ## 6
 
+
+
+
+## 8
+Se creó una tabla clientes y una tabla auditoria_clientes.
+
+![tablas](https://github.com/agustinbarbero/Base-de-Datos-II/blob/main/TP1/img/tablas.PNG)
+
+
+También se creó un trigger que registra los cambios en la tabla clientes.
+![trigger](https://github.com/agustinbarbero/Base-de-Datos-II/blob/main/TP1/img/trigger.PNG)
+
+
+Para probar el trigger insertamos un cliente y después le modificamos el nombre.
+![prueba trigger](https://github.com/agustinbarbero/Base-de-Datos-II/blob/main/TP1/img/pruebaTrigger.PNG)
+
+Luego hacemos una consulta a la tabla de auditoría, que muestra los datos viejos y los datos nuevos del cliente.
+![consola](https://github.com/agustinbarbero/Base-de-Datos-II/blob/main/TP1/img/consola.PNG)
