@@ -68,6 +68,7 @@ EXPLAIN SELECT * FROM marcas WHERE nombre = 'Oscorp';
 Para examinar 100.000 filas, una consulta sin indice lo hace en 300-800 ms aproximadamente.
 Una consulta con indice lo hace en 20-100 ms, un tiempo mucho mas bajo ya que no necesita recorrer cada fila de la tabla.
 
+***
 ## 5
 explain sin indices
 
@@ -102,6 +103,7 @@ filtered: 61.11 → El filtro es más eficaz.
 
 Conclusión: Aunque hay más índices disponibles, MySQL decide usar solo uno (en este caso idx_departamento).
 
+***
 ## 6
 create table ventas (
 id int primary key,
@@ -132,7 +134,7 @@ select nombre_producto, sum(total) as total from resumen_mensual group by nombre
 
 ![alt text](https://github.com/agustinbarbero/Base-de-Datos-II/blob/main/TP1/img/punto6.jpg)
 
-
+***
 ## 8
 Se creó una tabla clientes y una tabla auditoria_clientes.
 
@@ -148,3 +150,99 @@ Para probar el trigger insertamos un cliente y después le modificamos el nombre
 
 Luego hacemos una consulta a la tabla de auditoría, que muestra los datos viejos y los datos nuevos del cliente.
 ![consola](https://github.com/agustinbarbero/Base-de-Datos-II/blob/main/TP1/img/consola.PNG)
+
+***
+## 9 
+
+Este documento describe paso a paso cómo realizar un **backup completo** de una base de datos MySQL, cómo **restaurarlo**, y cómo **simular una pérdida de datos** para comprobar la efectividad del proceso.
+
+---
+
+## Requisitos Previos
+
+- MySQL instalado y funcionando.
+- Acceso al terminal o línea de comandos.
+- Privilegios suficientes para hacer backup y restore.
+
+---
+
+## 1. Crear una Base de Datos de Prueba (opcional)
+
+```sql
+CREATE DATABASE tienda;
+USE tienda;
+
+CREATE TABLE productos (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(50),
+    precio DECIMAL(10,2)
+);
+
+INSERT INTO productos (nombre, precio) VALUES
+('Manzana', 1.50),
+('Banana', 0.80),
+('Naranja', 1.00);
+```
+
+---
+
+## 2. Realizar un Backup Completo
+
+Usar `mysqldump`:
+
+```bash
+mysqldump -u root -p tienda > punto_9.sql
+```
+
+---
+
+## 3. Simular una Pérdida de Datos
+
+```sql
+DROP DATABASE tienda;
+```
+
+---
+
+## 4. Restaurar la Base de Datos
+
+Primero crear la base vacía (si el script no la incluye):
+
+```sql
+CREATE DATABASE tienda;
+```
+
+Restaurar desde el archivo:
+
+```bash
+mysql -u root -p tienda < punto_9.sql
+```
+
+---
+
+## 5. Verificar la Restauración
+
+Entrar a MySQL y consultar:
+
+```sql
+USE tienda;
+SELECT * FROM productos;
+```
+
+---
+
+## Resumen de Comandos
+
+| Acción                   | Comando                                             |
+|--------------------------|-----------------------------------------------------|
+| Backup                   | `mysqldump -u root -p tienda > punto_9.sql`         |
+| Pérdida de datos         | `DROP DATABASE tienda;`                             |
+| Crear base vacía         | `CREATE DATABASE tienda;`                           |
+| Restaurar                | `mysql -u root -p tienda < punto_9.sql`             |
+
+---
+
+## Notas
+
+- Se puede usar cualquier nombre de archivo para el backup, como `punto_9.sql`.
+- Asegurar de estar en el directorio correcto al ejecutar los comandos, o indicar la ruta completa del archivo `.sql`.
