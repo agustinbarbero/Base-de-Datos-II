@@ -1,0 +1,19 @@
+use("empresa");
+
+db.createCollection("clientes");
+
+db.clientes.insertMany([
+    { nombre: "Carlos", apellido: "López", edad: 45, puesto: "gerente", antiguedad: 15 },
+    { nombre: "Lucía", apellido: "García", edad: 29, puesto: "analista", antiguedad: 4 },
+    { nombre: "Martín", apellido: "Fernández", edad: 33, puesto: "vendedor", antiguedad: 7 },
+    { nombre: "Verónica", apellido: "Martínez", edad: 41, puesto: "contadora", antiguedad: 10 },
+    { nombre: "Andrés", apellido: "Ruiz", edad: 26, puesto: "asistente", antiguedad: 2 },
+    { nombre: "Romina", apellido: "Sosa", edad: 38, puesto: "administrativa", antiguedad: 9 }
+]);
+
+// Crear índice compuesto sobre nombre y apellido
+db.clientes.createIndex(
+    { nombre: 1, apellido: 1 });
+
+
+db.clientes.getIndexes();

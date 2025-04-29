@@ -1,0 +1,25 @@
+use("empresa");
+
+db.createCollection("ventas");
+db.ventas.insertMany([
+    { producto: "Celular", cantidad: 4, precio_unitario: 120000 },
+    { producto: "Celular", cantidad: 2, precio_unitario: 120000 },
+    { producto: "Notebook", cantidad: 3, precio_unitario: 350000 },
+    { producto: "Notebook", cantidad: 1, precio_unitario: 350000 },
+    { producto: "Auriculares", cantidad: 10, precio_unitario: 15000 }
+]);
+
+db.ventas.aggregate([
+    { 
+        $project: {
+            producto: 1,
+            total_venta: { $multiply: ["$cantidad", "$precio_unitario"] }
+        }
+    },
+    {
+        $group: {
+            _id: "$producto",
+            total_venta: { $sum: "$total_venta" }
+        }
+    }
+]);

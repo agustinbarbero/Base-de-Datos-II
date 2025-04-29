@@ -1,0 +1,17 @@
+use("empresa");
+
+db.createUser({
+    user: "admin",
+    pwd: "5555",
+    roles: [
+        { role: "readWrite", db: "empresa" }  
+    ]
+});
+
+/* 
+Backup de la base de datos:
+mongodump --db empresa --out ./backups
+-------------------------------------------
+Restauracion del backup:
+mongorestore --db empresa ./backups/empresa
+*/

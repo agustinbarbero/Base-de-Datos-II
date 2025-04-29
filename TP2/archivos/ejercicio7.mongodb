@@ -1,0 +1,30 @@
+use("escuela");
+
+db.createCollection("cursos");
+db.createCollection("alumnos");
+
+db.cursos.insertMany([
+    { _id: 101, nombre: "Física" },
+    { _id: 102, nombre: "Literatura" },
+    { _id: 103, nombre: "Bases de Datos" }
+]);
+
+db.alumnos.insertMany([
+    {
+        nombre: "Camila Torres",
+        edad: 19,
+        id_cursos: [101, 103]
+    },
+    {
+        nombre: "Santiago López",
+        edad: 23,
+        id_cursos: [102]
+    },
+    {
+        nombre: "Valentina Ruiz",
+        edad: 21,
+        id_cursos: [101, 102, 103]
+    }
+]);
+
+db.cursos.find();

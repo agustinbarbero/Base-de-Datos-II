@@ -1,0 +1,12 @@
+use("escuela");
+
+db.alumnos.aggregate([
+    {
+        $lookup: {
+            from: "cursos",               
+            localField: "id_cursos",     
+            foreignField: "_id",          
+            as: "cursos_inscriptos"       
+        }
+    }
+]);
