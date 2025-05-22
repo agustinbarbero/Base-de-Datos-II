@@ -1,0 +1,25 @@
+/* Ejercicio 6: Trabajo con fechas
+
+Practicar con operadores de fecha en el pipeline de agregación.
+
+Agrupar las ventas por mes y calcular el total vendido en cada mes.
+Encontrar el día de la semana con más ventas.
+*/
+use("tiendaOnline")
+
+db.ventas.aggregate([
+    {$group: {
+      _id: {$month: "$fecha"},
+      totalVendidoPorMes: {$sum: "$total"},
+    }},
+    {$sort: {_id: -1}}
+])
+
+db.ventas.aggregate([
+    {$group: {
+      _id: {$dayOfWeek: "$fecha"},
+      totalVendidoPorDia: {$sum: "$total"},
+    }},
+    {$sort: {totalVendidoPorDia: -1}},   // ordenamos de mayor a menor
+    {$limit: 1}   // solo muestra uno solo, que es el dia con mas ventas de la semana
+])

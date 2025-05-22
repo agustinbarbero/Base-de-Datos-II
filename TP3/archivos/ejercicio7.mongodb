@@ -1,0 +1,50 @@
+/* Ejercicio 7: Operadores condicionales
+
+Utilizar operadores condicionales en el pipeline.
+
+Clasificar los productos según su precio: "Económico" (<100), "Estándar" (100-500), "Premium" (>500).
+Clasificar las ventas según su total: "Pequeña" (<200), "Mediana" (200-800), "Grande" (>800).
+
+*/
+use("tiendaOnline")
+db.productos.aggregate([
+    {$project: {   // uso project para poder agregar el campo "clasificacion"
+        precio: 1,
+        nombre: 1,
+        clasificacion: {
+            $cond: {
+                if: {$lt: ["$precio", 100]} ,
+                then: "Economico",
+                else: {
+                    $cond: {
+                        if: {$lt: ["$precio", 500] },
+                        then: "Estandar",
+                        else: "Premium"
+                    }
+                }
+            }
+        }
+    }}
+])
+
+db.ventas.aggregate([
+    {$project: {
+      nombre: 1,
+      total: 1,
+      clasificacion: {
+        $cond:{
+            if: {$lt: ["$total", 200]},
+            then: "Pequeña",
+            else: {
+                $cond:{
+                    if: {$lt: ["$total", 800]},
+                    then: "Mediana",
+                    else: "Grande",
+                }
+            }
+        }
+      }
+    }}
+
+])
+
