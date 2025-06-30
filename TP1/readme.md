@@ -1,5 +1,54 @@
+## Ejercicio 1: Reglas de Integridad
+***
+Las violaciones posibles a la integridad referencial ocurririan al eliminar un estudiante con cursos inscritos. Si se elimina un estudiante, se rompe la relación entre las tablas Estudiantes y Matriculas. Esto se resuelve con la restriccion ON DELETE RESTRICT.
 
-## Ejercicio 3
+Las restricciones que utilizaria serian:
+```SQL
+ON DELETE RESTRICT;
+# Lanza un error si se desea eliminar un estudiante que esta inscripto en un curso
+``` 
+
+
+```SQL
+ON DELETE CASCADE; 
+# No permite eliminar un estudiante que se encuentra inscripto a un curso
+```
+
+
+## Ejercicio 2: Implementación de Restricciones
+***
+```SQL
+CREATE TABLE Estudiantes (
+        id_estudiante INT PRIMARY KEY,
+        nombre VARCHAR(100),
+        apellido VARCHAR(100),
+        fecha_nacimiento DATE
+);
+
+CREATE TABLE Matriculas(
+        id_matricula INT PRIMARY KEY,
+        id_estudiante INT,
+        id_curso INT,
+        fecha_matricula DATE,
+        FOREIGN KEY (id_estudiante) REFERENCES Estudiantes(id_estudiante) ON DELETE RESTRICT
+);
+
+INSERT INTO Estudiantes (id_estudiante, nombre, apellido, fecha_nacimiento)
+VALUES (1, 'Marcos', 'Lopez', '2002-07-21');
+
+INSERT INTO Matriculas (id_matricula, id_estudiante, id_curso, fecha_matricula)
+VALUES (100, 999, 501, '2024-06-30');   
+
+```
+En el insert de Matriculas, insertamos una matrícula para un estudiante que no existe (id_estudiante = 999)
+El error que se obtiene es el siguiente: 
+```SQL
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails 
+(`nombre_de_base`.`Matriculas`, CONSTRAINT `Matriculas_ibfk_1` FOREIGN KEY (`id_estudiante`) REFERENCES `Estudiantes` (`id_estudiante`))
+
+```
+
+## Ejercicio 3: Concurrencia
 ***
 En READ COMMITTED, si no se utiliza FOR UPDATE, pueden ocurrir condiciones de carrera que lleven a resultados incorrectos, ya que dos transacciones pueden leer el mismo saldo y luego modificarlo sin saber del cambio del otro. En cambio, con SERIALIZABLE, el sistema impone un control más estricto que evita este tipo de conflictos, ejecutando las transacciones como si fueran secuenciales, asegurando la consistencia de los datos.
 
@@ -54,7 +103,7 @@ READ COMMITTED por sí solo no evita errores de concurrencia si no se bloquea ex
 SERIALIZABLE es el nivel más seguro, pero puede generar **deadlocks**. En sistemas reales, se recomienda manejar esto con reintentos automáticos.
 
 ---
-## Ejercicio 4
+## Ejercicio 4: Plan de Ejecución
 Creamos un SQL con tres tablas: `categorias`, `marcas`, y `productos`. Se insertaron **100.000 registros** en la tabla `productos`.
 Luego ejecutamos la consulta **sin índice**:
 ```sql
@@ -77,7 +126,8 @@ EXPLAIN SELECT * FROM marcas WHERE nombre = 'Oscorp';
 - Con índice: tiempo de respuesta entre **20 y 100 ms**, mucho más eficiente ya que no recorre toda la tabla.
 
 ---
-## Ejercicio 5
+## Ejercicio 5: Creación de Indices
+
 ### Explain sin indices
 
 ![Consulta sin índices](https://github.com/agustinbarbero/Base-de-Datos-II/blob/main/TP1/img/punto5.jpg)
@@ -115,7 +165,7 @@ EXPLAIN SELECT * FROM marcas WHERE nombre = 'Oscorp';
 **Conclusión:** Aunque hay más índices disponibles, MySQL decide usar solo uno (en este caso idx_departamento).
 
 ***
-## Ejercicio 6
+## Ejercicio 6: Vistas
 
 Creación de una tabla ventas y una vista resumen_mensual.
 ```sql
@@ -161,7 +211,7 @@ LIMIT 5;
 ![Resultado](https://github.com/agustinbarbero/Base-de-Datos-II/blob/main/TP1/img/punto6.jpg)
 
 ***
-## Ejercicio 8
+## Ejercicio 8: Seguridad y Auditoría
 Se creó una tabla clientes y una tabla auditoria_clientes.
 ```sql
 -- Tabla principal
@@ -230,7 +280,7 @@ Luego hacemos una consulta a la tabla de auditoría, que muestra los datos viejo
 ![consola](https://github.com/agustinbarbero/Base-de-Datos-II/blob/main/TP1/img/consola.PNG)
 
 ***
-## Ejercicio 9 
+## Ejercicio 9: Backup y Restore
 
 Este documento describe paso a paso cómo realizar un **backup completo** de una base de datos MySQL, cómo **restaurarlo**, y cómo **simular una pérdida de datos** para comprobar la efectividad del proceso.
 
