@@ -1,6 +1,5 @@
 # Dependencias principales para el proyecto de eventos y tickets
-pymongo>=4.3.3
-bson>=0.5.10
+pymongo==4.6.3
 
 # Utilidades adicionales (opcionales pero recomendadas)
 python-dateutil>=2.8.2
