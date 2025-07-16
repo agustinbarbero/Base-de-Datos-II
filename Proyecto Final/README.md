@@ -2,6 +2,12 @@
 
 Este proyecto es una plataforma para la gestión de eventos y la venta de tickets, desarrollada en Python.
 
+##  Integrantes del grupo:
+- Felipe Fernandez
+- Agustin Barbero
+- Luciano Nicolas Lopez Gonzalez
+- Juan Ignacio Tarsia
+
 ## Requisitos previos
 - Python 3.8 o superior
 - Acceso a una instancia de MongoDB (local o remota)
@@ -29,7 +35,7 @@ python main.py
 ```
 
 
-Sigue las instrucciones del menú para crear eventos, comprar tickets, validar tickets, generar reportes, etc.
+Sigue las instrucciones del menú en la terminal para crear eventos, comprar tickets, validar tickets, generar reportes, etc.
 
 ## Estructura del proyecto
 
